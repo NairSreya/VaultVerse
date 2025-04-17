@@ -110,7 +110,16 @@ class App extends Component {
     async loadWeb3() {
         if (window.ethereum) {
             window.web3 = new Web3(window.ethereum);
-            await window.ethereum.enable();
+            try {
+             await window.ethereum.request({ method: 'eth_requestAccounts' });
+            } catch (error) {
+              if (error.code === 4001) {
+               alert('You need to connect MetaMask to use VaultVerse!');
+              } else {
+                console.error('MetaMask connection error:', error);
+              }
+            }
+
         } else if (window.web3) {
             window.web3 = new Web3(window.web3.currentProvider);
         }
